@@ -32,6 +32,7 @@ Only when **explicitly invoked** — the skill hard-ignores casual phrases like 
 Clone this repo and copy the skill directory into your Claude Code user-level skills folder:
 
 ```bash
+mkdir -p ~/.claude/skills
 git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
 cp -r stakeholder-writeup-skills/stakeholder-writeup ~/.claude/skills/
 ```
@@ -39,6 +40,7 @@ cp -r stakeholder-writeup-skills/stakeholder-writeup ~/.claude/skills/
 Or keep the repo and symlink (so `git pull` updates the skill in place):
 
 ```bash
+mkdir -p ~/.claude/skills
 git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
 ln -s "$(pwd)/stakeholder-writeup-skills/stakeholder-writeup" ~/.claude/skills/stakeholder-writeup
 ```

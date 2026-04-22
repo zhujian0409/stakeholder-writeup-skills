@@ -32,6 +32,7 @@ skill 的 frontmatter 里设了 `disable-model-invocation: true`，Claude 自己
 clone 本仓库，把 skill 目录拷到你的 Claude Code 用户级 skill 目录：
 
 ```bash
+mkdir -p ~/.claude/skills
 git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
 cp -r stakeholder-writeup-skills/stakeholder-writeup ~/.claude/skills/
 ```
@@ -39,6 +40,7 @@ cp -r stakeholder-writeup-skills/stakeholder-writeup ~/.claude/skills/
 或者保留本仓库，用软链接（这样 `git pull` 就能直接更新 skill）：
 
 ```bash
+mkdir -p ~/.claude/skills
 git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
 ln -s "$(pwd)/stakeholder-writeup-skills/stakeholder-writeup" ~/.claude/skills/stakeholder-writeup
 ```
