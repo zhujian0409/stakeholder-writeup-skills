@@ -1,0 +1,11 @@
+{
+  "name": "stakeholder-writeup",
+  "description": "Claude Code skill — turn a multi-turn technical investigation into an audience-tuned, fact-verified Markdown report (tech lead / exec / PM / customer).",
+  "version": "1.0.0",
+  "author": { "name": "zhujian0409" },
+  "homepage": "https://github.com/zhujian0409/stakeholder-writeup-skills",
+  "repository": "https://github.com/zhujian0409/stakeholder-writeup-skills",
+  "license": "MIT",
+  "keywords": ["claude-code", "claude-skills", "stakeholder", "writeup", "report", "markdown"],
+  "skills": ["./stakeholder-writeup"]
+}
