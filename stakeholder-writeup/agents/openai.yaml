@@ -1,0 +1,7 @@
+interface:
+  display_name: "Stakeholder Writeup"
+  short_description: "Turn verified technical investigations into audience-tuned Markdown reports"
+  default_prompt: "Use $stakeholder-writeup to turn the completed investigation into a stakeholder-facing Markdown report."
+
+policy:
+  allow_implicit_invocation: false

@@ -2,11 +2,11 @@
 
 **语言：** [English](README.md) | 中文
 
-[@zhujian0409](https://github.com/zhujian0409) 写的一个 [Claude Code](https://docs.claude.com/en/docs/agents-and-tools/claude-code/overview) skill——把一段多轮的技术调查对话整理成给非工程受众看的 Markdown 报告：只写有证据的事实、按受众调结构、显式调用才触发。
+[@zhujian0409](https://github.com/zhujian0409) 写的一个适用于 Claude Code 和 Codex 的 skill——把一段多轮的技术调查对话整理成给非工程受众看的 Markdown 报告：只写有证据的事实、按受众调结构、显式调用才触发。
 
 ## 干什么用
 
-跟 Claude 调查一个线上问题或者一个新功能，聊了 20-50 轮之后，直接说"写一份报告给我老板"，拿回来的东西通常问题不少——把猜测和核实过的数据混在一起、往给高层看的稿里塞 SQL、影响范围用一些模糊的"已缓解"糊过去。
+跟 AI agent 调查一个线上问题或者一个新功能，聊了 20-50 轮之后，直接说"写一份报告给我老板"，拿回来的东西通常问题不少——把猜测和核实过的数据混在一起、往给高层看的稿里塞 SQL、影响范围用一些模糊的"已缓解"糊过去。
 
 `stakeholder-writeup` 强制走一条不一样的路：
 
@@ -22,12 +22,15 @@
 **只在显式调用时触发**——skill 会 hard-ignore 像"写报告""写个 md"这种随口一说。要触发请用：
 
 - 斜杠命令：`/stakeholder-writeup`
+- Codex skill 调用：`$stakeholder-writeup`
 - 显式点名："用 stakeholder-writeup 写一份我们刚才的调试总结"
 - 英文：`use the stakeholder-writeup skill`
 
-skill 的 frontmatter 里设了 `disable-model-invocation: true`，Claude 自己不会主动触发这个 skill。
+Codex 侧通过 `stakeholder-writeup/agents/openai.yaml` 设置了 `allow_implicit_invocation: false`，所以默认也是显式调用才触发。
 
 ## 安装
+
+### Claude Code
 
 clone 本仓库，把 skill 目录拷到你的 Claude Code 用户级 skill 目录：
 
@@ -46,6 +49,44 @@ ln -s "$(pwd)/stakeholder-writeup-skills/stakeholder-writeup" ~/.claude/skills/s
 ```
 
 放到 `~/.claude/skills/` 下的 skill 会被 Claude Code 自动注册。下一次会话里 `/stakeholder-writeup` 就会作为斜杠命令出现。
+
+### Codex
+
+clone 本仓库，把 skill 目录拷到 Codex 用户级 skills 目录：
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
+cp -r stakeholder-writeup-skills/stakeholder-writeup ~/.codex/skills/
+```
+
+或者保留本仓库，用软链接：
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/zhujian0409/stakeholder-writeup-skills.git
+ln -s "$(pwd)/stakeholder-writeup-skills/stakeholder-writeup" ~/.codex/skills/stakeholder-writeup
+```
+
+安装后重启 Codex。使用 `$stakeholder-writeup` 调用。
+
+## 可选私有归档库
+
+如果希望每份报告自动进入一个可搜索的私有归档库，可以先建一个 private git 仓库，然后设置：
+
+```bash
+export STAKEHOLDER_WRITEUPS_DIR=/path/to/private/stakeholder-writeups
+```
+
+skill 会使用：
+
+```text
+reports/YYYY/MM/YYYY-MM-DD_查询人_修复人_主题.md
+index.md
+index.json
+```
+
+如果报告里包含内部系统名、人员、日志、SQL、客户上下文或运维细节，归档库应保持 private。不要把密码、token、私钥、API key 或原始敏感凭据写进报告。
 
 ## 设计理念
 

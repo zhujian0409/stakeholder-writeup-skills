@@ -1,7 +1,6 @@
 ---
 name: stakeholder-writeup
-description: Produces a stakeholder-facing md report from a multi-turn investigation conversation. Output is verified-fact-only, honest-impact, clear-scope, with a required anti-pattern list and an audience-tuned executive summary. On invocation, FIRST detects the output language (English default; Chinese when the conversation or user request is Chinese) and confirms the audience (1-Technical lead / 2-Non-technical exec / 3-PM·Business / 4-External customer), then tunes the skeleton accordingly. INVOKE ONLY WHEN EXPLICITLY CALLED — via the `/stakeholder-writeup` slash command or when the user explicitly names this skill. DO NOT auto-trigger on casual phrases like "write a report" / "写报告" / "写个 md" — wait for explicit invocation.
-disable-model-invocation: true
+description: Produces a stakeholder-facing md report from a multi-turn investigation conversation. Output is verified-fact-only, honest-impact, clear-scope, with a required anti-pattern list and an audience-tuned executive summary. On invocation, FIRST detects the output language (English default; Chinese when the conversation or user request is Chinese) and confirms the audience (1-Technical lead / 2-Non-technical exec / 3-PM·Business / 4-External customer), then tunes the skeleton accordingly. INVOKE ONLY WHEN EXPLICITLY CALLED — via the `/stakeholder-writeup` slash command, `$stakeholder-writeup`, or when the user explicitly names this skill. DO NOT auto-trigger on casual phrases like "write a report" / "写报告" / "写个 md" — wait for explicit invocation.
 allowed-tools: Read Grep Bash Write Edit
 ---
 
@@ -345,7 +344,41 @@ Pitfall examples are kept in their original language — authenticity beats tran
 
 ## Output location
 
-Default: `<project-root>/docs/<topic>-analysis.md`. If no `docs/` convention, ask first.
+Use this order:
+
+1. If the user gives an explicit output path, write there.
+2. If a private stakeholder report archive is configured, write there:
+
+```text
+${STAKEHOLDER_WRITEUPS_DIR}/reports/YYYY/MM/YYYY-MM-DD_查询人_修复人_主题.md
+```
+
+Then update the archive indexes:
+
+```text
+${STAKEHOLDER_WRITEUPS_DIR}/index.md
+${STAKEHOLDER_WRITEUPS_DIR}/index.json
+```
+
+If the archive is a git checkout, commit and push after writing unless the user explicitly says local-only:
+
+```text
+cd "${STAKEHOLDER_WRITEUPS_DIR}"
+git add reports index.md index.json
+git commit -m "Add stakeholder writeup: <topic>"
+git push
+```
+
+3. If no archive is configured, default to `<project-root>/docs/<topic>-analysis.md`. If no `docs/` convention exists, ask first.
+
+Private archive rules:
+
+- The archive should be private if reports include internal system names, people, logs, SQL, customer context, or operational details.
+- Do not store API keys, passwords, tokens, private keys, raw customer secrets, or full credential-bearing URLs.
+- Use a searchable filename: `YYYY-MM-DD_查询人_修复人_主题.md`.
+- Use today's local date only when the report context does not specify a concrete date.
+- If query person or repair person is not confirmed, use `unknown`; do not invent names and do not ask an extra question only for the filename.
+- If topic is not obvious, derive a short readable topic from the confirmed symptom/system.
 
 ## When this skill updates
 
